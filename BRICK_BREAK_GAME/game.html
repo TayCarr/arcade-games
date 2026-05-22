@@ -11,11 +11,24 @@
     
     <script>
         var canvas, canvasContext;
+
+        var mouseX;
+        var mouseY;
+
         var ballX = 75;
         var ballY = 75;
         var ballSpeedX = 5;
         var ballSpeedY = 7;
 
+        //brick dimensions
+        const BRICK_W = 100;
+        const BRICK_H = 50;
+        const BRICK_COUNT = 4;
+        
+        //using the index to identify the brick # and change the bool to show or not that brick
+        var brickGrid = [true, false, true, true];
+        
+        
         const PADDLE_WIDTH = 100;
         const PADDLE_THICKNESS = 10;
         const PADDLE_DIST_FROM_EDGE = 60;
@@ -28,8 +41,8 @@
             var root = document.documentElement;
 
             //subtract how far the canvas is from the left side and how much a person has scrolled the page
-            var mouseX = evt.clientX - rect.left - root.scrollLeft;
-            //var mouseY = evt.clientY - rect.top - root.scrollTop;
+            mouseX = evt.clientX - rect.left - root.scrollLeft;
+            mouseY = evt.clientY - rect.top - root.scrollTop;
 
             paddleX = mouseX - PADDLE_WIDTH/2;
 
@@ -98,13 +111,37 @@
             }
         }
 
+        function drawBricks(){
+            if(brickGrid[0]){
+                colorRect(0, 0, BRICK_W-2 ,BRICK_H, 'blue');
+            }
+            if(brickGrid[1]){
+                colorRect(BRICK_W, 0, BRICK_W-2 ,BRICK_H, 'blue');
+            }
+            if(brickGrid[2]){
+                colorRect(BRICK_W*2, 0, BRICK_W-2 ,BRICK_H, 'blue');
+            }
+            if(brickGrid[3]){
+                colorRect(BRICK_W*3, 0, BRICK_W-2 ,BRICK_H, 'blue');
+            }
+
+        }
+
         function drawAll(){
             //clear screen
             colorRect(0, 0, canvas.width, canvas.height, 'black');
+
             //draw ball
             colorCircle(ballX, ballY, 10, 'white')
+
             //paddle
             colorRect(paddleX, canvas.height-PADDLE_DIST_FROM_EDGE, PADDLE_WIDTH, PADDLE_THICKNESS, 'white');
+            
+            //bricks
+            drawBricks();
+
+            //write mouse coordinates
+            colorText(mouseX+","+mouseY, mouseX, mouseY, 'yellow');
         }
 
         function colorRect(topLeftX, topLeftY, boWidth, boxHeight, fillColor){
@@ -118,6 +155,11 @@
             canvasContext.arc(centerX, centerY, radius, 0, Math.PI*2, true);
             canvasContext.fill();
 
+        }
+
+        function colorText(showWords, textX, textY, fillColor){
+            canvasContext.fillStyle = fillColor;
+            canvasContext.fillText(showWords, textX, textY);
         }
     </script>
     </body>
