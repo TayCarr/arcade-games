@@ -21,12 +21,14 @@
         var ballSpeedY = 7;
 
         //brick dimensions
-        const BRICK_W = 100;
-        const BRICK_H = 50;
-        const BRICK_COUNT = 4;
+        const BRICK_W = 80;
+        const BRICK_H = 20;
+        const BRICK_GAP = 2;
+        const BRICK_COLS = 10;
+        const BRICK_ROWS = 14;
         
         //using the index to identify the brick # and change the bool to show or not that brick
-        var brickGrid = [true, false, true, true];
+        var brickGrid = new Array(BRICK_COLS * BRICK_ROWS);
         
         
         const PADDLE_WIDTH = 100;
@@ -48,6 +50,21 @@
 
         }
 
+        function brickReset(){
+            for(var i = 0; i < BRICK_COLS * BRICK_ROWS; i++){
+                if(Math.random() < 0.5){
+                    brickGrid[i] = true;
+                }
+                else{
+                    brickGrid[i] = false;
+                }//end of else rand check
+
+                //brickGrid[i] = true;
+                
+            }//end of for each brick
+            
+        }//end of brick reset func
+
 
         window.onload = function(){ //gets called as soon as html page finishes loading
             canvas = document.getElementById('gameCanvas'); //get width and height
@@ -58,6 +75,8 @@
 
             //capture mouse movement
             canvas.addEventListener('mousemove', updateMousePos);
+
+            brickReset();
 
 
         }
@@ -112,20 +131,17 @@
         }
 
         function drawBricks(){
-            if(brickGrid[0]){
-                colorRect(0, 0, BRICK_W-2 ,BRICK_H, 'blue');
-            }
-            if(brickGrid[1]){
-                colorRect(BRICK_W, 0, BRICK_W-2 ,BRICK_H, 'blue');
-            }
-            if(brickGrid[2]){
-                colorRect(BRICK_W*2, 0, BRICK_W-2 ,BRICK_H, 'blue');
-            }
-            if(brickGrid[3]){
-                colorRect(BRICK_W*3, 0, BRICK_W-2 ,BRICK_H, 'blue');
-            }
+            for(var eachRow = 0; eachRow < BRICK_ROWS; eachRow++){
+                for(var eachCol = 0; eachCol < BRICK_COLS; eachCol++){
+                    var arrayIndex = BRICK_COLS * eachRow + eachCol;
+                    if(brickGrid[arrayIndex]){
+                        colorRect(BRICK_W*eachCol, BRICK_H*eachRow, BRICK_W - BRICK_GAP ,BRICK_H - BRICK_GAP, 'blue');
+                    }//end of checking if brick is there
+                
+                }//end of for each brick
+            }//end of for each row
 
-        }
+        }//end of draw brick
 
         function drawAll(){
             //clear screen
@@ -141,7 +157,9 @@
             drawBricks();
 
             //write mouse coordinates
-            colorText(mouseX+","+mouseY, mouseX, mouseY, 'yellow');
+            var mouseBrickCol = Math.floor(mouseX / BRICK_W);
+            var mouseBrickRow = Math.floor(mouseY / BRICK_H);
+            colorText(mouseBrickCol+","+mouseBrickRow, mouseX, mouseY, 'yellow');
         }
 
         function colorRect(topLeftX, topLeftY, boWidth, boxHeight, fillColor){
