@@ -10,6 +10,14 @@
         <canvas id="gameCanvas" width="800" height="600"></canvas>
     
     <script>
+        /**********************
+         * THINGS YOU COULD ADD !! TODO !!
+         * enemies
+         * power ups
+         * lives
+         * levels
+         * ball that speeds up the longer you play
+         *****************************/
         var canvas, canvasContext;
 
         var mouseX;
@@ -29,7 +37,9 @@
         
         //using the index to identify the brick # and change the bool to show or not that brick
         var brickGrid = new Array(BRICK_COLS * BRICK_ROWS);
-        
+
+        //track bricks to know when to reset game
+        var bricksLeft = 0;
         
         const PADDLE_WIDTH = 100;
         const PADDLE_THICKNESS = 10;
@@ -48,18 +58,33 @@
 
             paddleX = mouseX - PADDLE_WIDTH/2;
 
+            //*****FOR TESTING MAKE BALL ON MOUSE
+            /*ballX = mouseX;
+            ballY = mouseY;
+            ballSpeedX = 3;
+            ballSpeedY = -4;*/
+            //****
         }
 
         function brickReset(){
-            for(var i = 0; i < BRICK_COLS * BRICK_ROWS; i++){
-                if(Math.random() < 0.5){
+            bricksLeft = 0;
+            //first three rows set to false for gutter at top 
+            var i;
+            for(i = 0; i < 3 * BRICK_COLS; i++){
+                brickGrid[i] = false;
+            }
+
+            for(; i < BRICK_COLS * BRICK_ROWS; i++){
+                //silly bit if you want bricks to randomly generate 
+                /*if(Math.random() < 0.5){
                     brickGrid[i] = true;
                 }
                 else{
                     brickGrid[i] = false;
-                }//end of else rand check
+                }//end of else rand check****************/
 
-                //brickGrid[i] = true;
+                brickGrid[i] = true;
+                bricksLeft++;
                 
             }//end of for each brick
             
@@ -77,7 +102,7 @@
             canvas.addEventListener('mousemove', updateMousePos);
 
             brickReset();
-
+            ballReset();
 
         }
 
@@ -91,26 +116,103 @@
             ballY = canvas.height/2;
         }
 
-        function moveAll(){
-
+        function ballMove(){
             ballX += ballSpeedX;
             ballY += ballSpeedY;
 
-            if(ballX < 0){//left side of screen 
+            //added the secondary logic as the ball can get stuck in the wall if the paddle is slightly off the screen on collision
+            if(ballX < 0 && ballSpeedX < 0.0){//left side of screen 
                 ballSpeedX *= -1;
             }
-            if(ballX > canvas.width){//right side of screen
+            if(ballX > canvas.width && ballSpeedX > 0.0){//right side of screen
                 ballSpeedX *= -1;
             }
 
-            if(ballY < 0){//top of screen
+            if(ballY < 0 && ballSpeedY < 0.0){//top of screen
                 ballSpeedY *= -1;
             }
             if(ballY > canvas.height){//bottom of screen
+                if(bricksLeft == 0){
+                        brickReset();
+                    }//endgame reset
                 ballReset();
                 
             }
+        }
 
+        function isBrickAtColRow(col, row){
+            if(col >= 0 && col < BRICK_COLS && row >= 0 && row < BRICK_ROWS){
+                var brickIndexUnderCoord = rowColToArrayIndex(col, row);
+                return brickGrid[brickIndexUnderCoord];
+            }
+            else{
+                return false;
+            }
+        }
+
+        function ballBrickHandling(){
+            /*********USED WITH TESTING collision on mouse
+            //write mouse coordinates
+            var mouseBrickCol = Math.floor(mouseX / BRICK_W);
+            var mouseBrickRow = Math.floor(mouseY / BRICK_H);
+            var brickIndexUnderMouse = rowColToArrayIndex(mouseBrickCol, mouseBrickRow);
+            colorText(mouseBrickCol+","+mouseBrickRow+":"+brickIndexUnderMouse, mouseX, mouseY, 'yellow');
+
+            //for testing, remove the brick at index under mouse 
+            if(brickIndexUnderMouse >= 0 && brickIndexUnderMouse < BRICK_COLS*BRICK_ROWS){
+                brickGrid[brickIndexUnderMouse] = false;
+            }********/
+
+            //ball collision
+            var ballBrickCol = Math.floor(ballX / BRICK_W);
+            var ballBrickRow = Math.floor(ballY / BRICK_H);
+            var brickIndexUnderBall = rowColToArrayIndex(ballBrickCol, ballBrickRow);
+            colorText(ballBrickCol+","+ballBrickRow+":"+brickIndexUnderBall, mouseX, mouseY, 'yellow');
+
+            //remove the brick at index under ball 
+            if(ballBrickCol >= 0 && ballBrickCol < BRICK_COLS && ballBrickRow >= 0 && ballBrickRow < BRICK_ROWS){
+                if(isBrickAtColRow(ballBrickCol, ballBrickRow)){//only need to do if there is a brick there else do nothing
+                    brickGrid[brickIndexUnderBall] = false;
+                    bricksLeft--;
+                    //console.log(bricksLeft);
+
+                    //check where the ball was one frame before collision to determine bounce bck angle
+                    var prevBallX = ballX - ballSpeedX;
+                    var prevBallY = ballY - ballSpeedY;
+                    var prevBrickCol = Math.floor(prevBallX / BRICK_W);
+                    var prevBrickRow = Math.floor(prevBallY / BRICK_H);
+
+                    var bothTestsFailed = true;
+
+                    //if prev col are dif then the ball is hitting the length sides of the brick
+                    if(prevBrickCol != ballBrickCol){
+
+                        if(isBrickAtColRow(prevBrickCol, ballBrickRow) == false){
+                            ballSpeedX *= -1; //flip horizontally
+                            bothTestsFailed = false;
+                        }
+                    }
+                    //if prev row is dif then ball is hitting the flat width side of brick
+                    if(prevBrickRow != ballBrickRow){
+                        
+                        if(isBrickAtColRow(ballBrickCol, prevBrickRow) == false){
+                            ballSpeedY *= -1; //flip vertically
+                            bothTestsFailed = false;
+                        }
+                    }
+
+                    if(bothTestsFailed){//armpit case, prevents ball from going right through
+                        ballSpeedX *= -1;
+                        ballSpeedY *= -1;
+                        //if you want could remove all three bricks too
+                    }
+
+                    
+                }//end of brick collision switch  
+            }//end of collision check
+        }//end of ball brick handling function
+
+        function ballPaddleHandling(){
             var paddleTopEdgeY = canvas.height-PADDLE_DIST_FROM_EDGE;
             var paddleBottomEdgeY = paddleTopEdgeY + PADDLE_THICKNESS;
             var paddleLeftEdgeX = paddleX;
@@ -127,13 +229,31 @@
                     var centerOfPaddleX = paddleX + PADDLE_WIDTH/2;
                     var ballDistFromPaddleCenterX = ballX - centerOfPaddleX;
                     ballSpeedX = ballDistFromPaddleCenterX * 0.35;
-            }
+
+                    if(bricksLeft == 0){
+                        brickReset();
+                    }//endgame reset
+            }//detect ball collide with paddle
+        }//end of paddle handle function
+
+        function moveAll(){
+
+            ballMove();
+            ballBrickHandling();
+            ballPaddleHandling();
+            
+        }
+
+        function rowColToArrayIndex(col, row){
+            return col + BRICK_COLS * row;
         }
 
         function drawBricks(){
             for(var eachRow = 0; eachRow < BRICK_ROWS; eachRow++){
                 for(var eachCol = 0; eachCol < BRICK_COLS; eachCol++){
-                    var arrayIndex = BRICK_COLS * eachRow + eachCol;
+
+                    var arrayIndex = rowColToArrayIndex(eachCol, eachRow);
+
                     if(brickGrid[arrayIndex]){
                         colorRect(BRICK_W*eachCol, BRICK_H*eachRow, BRICK_W - BRICK_GAP ,BRICK_H - BRICK_GAP, 'blue');
                     }//end of checking if brick is there
@@ -156,10 +276,6 @@
             //bricks
             drawBricks();
 
-            //write mouse coordinates
-            var mouseBrickCol = Math.floor(mouseX / BRICK_W);
-            var mouseBrickRow = Math.floor(mouseY / BRICK_H);
-            colorText(mouseBrickCol+","+mouseBrickRow, mouseX, mouseY, 'yellow');
         }
 
         function colorRect(topLeftX, topLeftY, boWidth, boxHeight, fillColor){
