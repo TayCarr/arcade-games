@@ -12,11 +12,7 @@
     <script>
         /**********************
          * THINGS YOU COULD ADD !! TODO !!
-         * enemies
-         * power ups
-         * lives
-         * levels
-         * ball that speeds up the longer you play
+         * 
          *****************************/
         var canvas, canvasContext;
 
@@ -27,6 +23,9 @@
         var ballY = 75;
         var ballSpeedX = 5;
         var ballSpeedY = 7;
+
+        var carPic = document.createElement("img");
+        var carPicLoaded = false;
 
         //track dimensions
         const TRACK_W = 40;
@@ -82,6 +81,11 @@
 
             //capture mouse movement
             canvas.addEventListener('mousemove', updateMousePos);
+
+            carPic.onload = function(){
+                carPicLoaded = true;
+            }
+            carPic.src = "player1car.png";
 
             ballReset();
 
@@ -228,7 +232,13 @@
             colorRect(0, 0, canvas.width, canvas.height, 'black');
 
             //draw ball
-            colorCircle(ballX, ballY, 10, 'white')
+            //colorCircle(ballX, ballY, 10, 'white')
+
+            //car image 
+            if(carPicLoaded){
+                //subtracting half of the lengths centers the image in middle of that position rather than in the top corner
+                canvasContext.drawImage(carPic, ballX - carPic.width/2, ballY - carPic.height/2);
+            }
             
             //tracks
             drawTracks();
