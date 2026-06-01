@@ -21,9 +21,8 @@
 
         var carX = 75;
         var carY = 75;
-        var carAng = 0;
-        var carSpeedX = 5;
-        var carSpeedY = 7;
+        var carAng = 0; //radians
+        var carSpeed = 2;
 
         var carPic = document.createElement("img");
         var carPicLoaded = false;
@@ -116,26 +115,15 @@
         }
 
         function carMove(){
-            //carX += carSpeedX;
-            //carY += carSpeedY;
+            //think hypotenuse sohcahtoa type nasty ugly icky math 
+            //if moving at angle calculates the distance moved at speed 
+            //working iin radians
+            carX += Math.cos(carAng) * carSpeed;
+            carY += Math.sin(carAng) * carSpeed;
+
             carAng += 0.02;
 
-            if(carX < 0 && carSpeedX < 0.0){//left side of screen 
-                carSpeedX *= -1;
-            }
-            if(carX > canvas.width && carSpeedX > 0.0){//right side of screen
-                carSpeedX *= -1;
-            }
-
-            if(carY < 0 && carSpeedY < 0.0){//top of screen
-                carSpeedY *= -1;
-            }
-            if(carY > canvas.height){//bottom of screen
-                
-                carReset();
-                trackReset();
-                
-            }
+            
         }
 
         function isTrackAtColRow(col, row){
@@ -166,39 +154,7 @@
             //remove the track at index under car 
             if(carTrackCol >= 0 && carTrackCol < TRACK_COLS && carTrackRow >= 0 && carTrackRow < TRACK_ROWS){
                 if(isTrackAtColRow(carTrackCol, carTrackRow)){//only need to do if there is a track there else do nothing
-                    
-
-                    //check where the car was one frame before collision to determine bounce bck angle
-                    var prevCarX = carX - carSpeedX;
-                    var prevCarY = carY - carSpeedY;
-                    var prevTrackCol = Math.floor(prevCarX / TRACK_W);
-                    var prevTrackRow = Math.floor(prevCarY / TRACK_H);
-
-                    var bothTestsFailed = true;
-
-                    //if prev col are dif then the car is hitting the length sides of the track
-                    if(prevTrackCol != carTrackCol){
-
-                        if(isTrackAtColRow(prevTrackCol, carTrackRow) == false){
-                            carSpeedX *= -1; //flip horizontally
-                            bothTestsFailed = false;
-                        }
-                    }
-                    //if prev row is dif then car is hitting the flat width side of track
-                    if(prevTrackRow != carTrackRow){
-                        
-                        if(isTrackAtColRow(carTrackCol, prevTrackRow) == false){
-                            carSpeedY *= -1; //flip vertically
-                            bothTestsFailed = false;
-                        }
-                    }
-
-                    if(bothTestsFailed){//armpit case, prevents car from going right through
-                        carSpeedX *= -1;
-                        carSpeedY *= -1;
-                        
-                    }
-
+                    carSpeed *= -1;
                     
                 }//end of track collision switch  
             }//end of collision check
