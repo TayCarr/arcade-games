@@ -22,11 +22,21 @@
         var carX = 75;
         var carY = 75;
         var carAng = 0; //radians
-        var carSpeed = 2;
+        var carSpeed = 0;
 
         var carPic = document.createElement("img");
         var carPicLoaded = false;
 
+        const KEY_LEFT_ARROW = 37;
+        const KEY_UP_ARROW = 38;
+        const KEY_RIGHT_ARROW = 39;
+        const KEY_DOWN_ARROW = 40;
+
+        var keyHeld_Gas = false;
+        var keyHeld_Reverse = false;
+        var keyHeld_TurnLeft = false;
+        var keyHeld_TurnRight = false;
+        
         //track dimensions
         const TRACK_W = 40;
         const TRACK_H = 40;
@@ -71,6 +81,41 @@
             //****
         }
 
+        function keyPressed(evt){
+            //how to see the value for the key being pressed, easy way to get for use later
+            //console.log("Key pressed: "+evt.keyCode);
+
+            if(evt.keyCode == KEY_LEFT_ARROW){
+                keyHeld_TurnLeft = true;
+            }
+            if(evt.keyCode == KEY_RIGHT_ARROW){
+                keyHeld_TurnRight = true;
+            }
+            if(evt.keyCode == KEY_UP_ARROW){
+                keyHeld_Gas = true;
+            }
+            if(evt.keyCode == KEY_DOWN_ARROW){
+                keyHeld_Reverse = true;
+            }
+
+        }
+
+        function keyReleased(evt){
+            //console.log("Key released: "+evt.keyCode);
+            if(evt.keyCode == KEY_LEFT_ARROW){
+                keyHeld_TurnLeft = false;
+            }
+            if(evt.keyCode == KEY_RIGHT_ARROW){
+                keyHeld_TurnRight = false;
+            }
+            if(evt.keyCode == KEY_UP_ARROW){
+                keyHeld_Gas = false;
+            }
+            if(evt.keyCode == KEY_DOWN_ARROW){
+                keyHeld_Reverse = false;
+            }
+        }
+
 
         window.onload = function(){ //gets called as soon as html page finishes loading
             canvas = document.getElementById('gameCanvas'); //get width and height
@@ -81,6 +126,9 @@
 
             //capture mouse movement
             canvas.addEventListener('mousemove', updateMousePos);
+
+            document.addEventListener('keydown', keyPressed);
+            document.addEventListener('keyup', keyReleased);
 
             carPic.onload = function(){
                 carPicLoaded = true;
@@ -104,6 +152,8 @@
 
                     if(trackGrid[arrayIndex] == 2){
                         trackGrid[arrayIndex] = 0;
+                        //carAng = -Math.PI/2; //also 90 degs in radians
+                        carAng = -90 * Math.PI/180.0; //convert degrees to rads
                         //(each * TRACK) = the top corner of that square will be where the car is drawn
                         //(each * TRACK + TRACK/2) = center of the square will draw car there
                         carX = eachCol * TRACK_W + TRACK_W/2;
@@ -115,14 +165,26 @@
         }
 
         function carMove(){
+            //each frame reduce speed by 3%
+            carSpeed *= 0.97;
+
+            if(keyHeld_Gas){
+                carSpeed += 0.3; //play with acceleration
+            }
+            if(keyHeld_Reverse){
+                carSpeed -= 0.3;
+            }
+            if(keyHeld_TurnLeft){//how fast it turns
+                carAng -= 0.04;
+            }
+            if(keyHeld_TurnRight){
+                carAng += 0.04;
+            }
             //think hypotenuse sohcahtoa type nasty ugly icky math 
             //if moving at angle calculates the distance moved at speed 
-            //working iin radians
+            //working in radians
             carX += Math.cos(carAng) * carSpeed;
             carY += Math.sin(carAng) * carSpeed;
-
-            carAng += 0.02;
-
             
         }
 
@@ -154,7 +216,12 @@
             //remove the track at index under car 
             if(carTrackCol >= 0 && carTrackCol < TRACK_COLS && carTrackRow >= 0 && carTrackRow < TRACK_ROWS){
                 if(isTrackAtColRow(carTrackCol, carTrackRow)){//only need to do if there is a track there else do nothing
-                    carSpeed *= -1;
+                    //next two lines fix a bug, undoes the car movement which got it into a wall
+                    //makes the walls more solid
+                    carX -= Math.cos(carAng) * carSpeed;
+                    carY -= Math.sin(carAng) * carSpeed;
+
+                    carSpeed *= -0.5; //bumps the car and reduces the speed on collision
                     
                 }//end of track collision switch  
             }//end of collision check
@@ -205,7 +272,7 @@
         }
 
         function drawBitmapCenteredWithRotation(useBitmap, atX, atY, withAng){
-            console.log("spinning");
+            
             canvasContext.save();
             canvasContext.translate(atX, atY);
             canvasContext.rotate(withAng);
