@@ -1,6 +1,4 @@
 
-var roadPic = document.createElement("img");
-var wallPic = document.createElement("img");
 
 //track dimensions
 //TODO when making the tiles set the to 40x40 OR whatever WxH you have below
@@ -31,11 +29,6 @@ var trackGrid = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
 const TRACK_ROAD = 0;
 const TRACK_WALL = 1;
 const TRACK_PLAYERSTART = 2;
-
-function trackLoadImages(){
-    roadPic.src = "track_road.png";
-    wallPic.src = "track_wall.png";
-}
 
 function isWallAtColRow(col, row){
     if(col >= 0 && col < TRACK_COLS && row >= 0 && row < TRACK_ROWS){

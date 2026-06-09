@@ -11,12 +11,20 @@ window.onload = function(){ //gets called as soon as html page finishes loading
     canvas = document.getElementById('gameCanvas'); //get width and height
     canvasContext = canvas.getContext('2d'); //grabs the actual graphics buffer
 
+    //very basic loading screen
+    colorRect(0, 0, canvas.width, canvas.height, 'red');
+    colorText("LOADING IMAGES", canvas.width/2, canvas.height/2, 'white');
+    //
+
+    loadImages();
+}
+
+function imageLoadingDoneSoStartGame(){
+
     var framesPerSecond = 30;
     setInterval(updateAll, 1000/framesPerSecond);
 
     setUpInput();
-    trackLoadImages();
-    carImageLoad();
 
     carReset();
 
