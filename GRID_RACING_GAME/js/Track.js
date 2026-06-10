@@ -9,31 +9,34 @@ const TRACK_COLS = 20;
 const TRACK_ROWS = 15;
 
 //numbers to to draw the map layout 
-var trackGrid = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
-                    1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
+var trackGrid = [   4, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4, 4, 
+                    4, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
                     1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
                     1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1,
-                    1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1,
-                    1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 1,
-                    1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1,
+                    1, 0, 0, 0, 1, 1, 1, 1, 4, 4, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1,
+                    1, 0, 0, 1, 1, 0, 0, 1, 4, 4, 4, 1, 0, 1, 0, 0, 1, 0, 0, 1,
+                    1, 0, 0, 1, 0, 0, 0, 0, 1, 4, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1,
                     1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1,
-                    1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1,
-                    1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1,
-                    1, 0, 2, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1,
+                    1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 5, 0, 0, 1, 0, 0, 1,
+                    1, 0, 0, 1, 0, 0, 5, 0, 0, 0, 5, 0, 0, 1, 0, 0, 5, 0, 0, 1,
+                    1, 0, 2, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1,
                     1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1,
-                    1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1,
-                    1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1,
-                    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                    1, 0, 3, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1,
+                    1, 0, 3, 0, 0, 0, 1, 4, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1,
+                    1, 1, 1, 1, 1, 1, 1, 4, 4, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4,
                 ];
 // 1 -> wall, 0 -> road, 2 -> car start position
 const TRACK_ROAD = 0;
 const TRACK_WALL = 1;
 const TRACK_PLAYERSTART = 2;
+const TRACK_GOAL = 3;
+const TRACK_TREE = 4;
+const TRACK_FLAG = 5;
 
-function isWallAtColRow(col, row){
+function isObstacleAtColRow(col, row){
     if(col >= 0 && col < TRACK_COLS && row >= 0 && row < TRACK_ROWS){
         var trackIndexUnderCoord = rowColToArrayIndex(col, row);
-        return trackGrid[trackIndexUnderCoord] == TRACK_WALL;
+        return trackGrid[trackIndexUnderCoord] != TRACK_ROAD;
     }
     else{
         return false;
@@ -57,7 +60,7 @@ function carTrackHandling(){
 
     //remove the track at index under car 
     if(carTrackCol >= 0 && carTrackCol < TRACK_COLS && carTrackRow >= 0 && carTrackRow < TRACK_ROWS){
-        if(isWallAtColRow(carTrackCol, carTrackRow)){//only need to do if there is a track there else do nothing
+        if(isObstacleAtColRow(carTrackCol, carTrackRow)){//only need to do if there is a track there else do nothing
             //next two lines fix a bug, undoes the car movement which got it into a wall
             //makes the walls more solid
             carX -= Math.cos(carAng) * carSpeed;
@@ -74,22 +77,44 @@ function rowColToArrayIndex(col, row){
 }
 
 function drawTracks(){
+    //doing these three var changes and incrementing is more efficient than making the funct call and multiplying for every tile
+    var arrayIndex = 0;
+    var drawTileX = 0;
+    var drawTileY = 0;
+
     for(var eachRow = 0; eachRow < TRACK_ROWS; eachRow++){
         for(var eachCol = 0; eachCol < TRACK_COLS; eachCol++){
+            
+            var tileKindHere = trackGrid[arrayIndex];
+            var useImage = trackPics[tileKindHere];
 
-            var arrayIndex = rowColToArrayIndex(eachCol, eachRow);
+            /*//switch case used previously 
+            var useImage; 
 
-            if(trackGrid[arrayIndex] == TRACK_ROAD){
-                canvasContext.drawImage(roadPic, TRACK_W*eachCol, TRACK_H*eachRow);
-
-                //colorRect(TRACK_W*eachCol, TRACK_H*eachRow, TRACK_W - TRACK_GAP ,TRACK_H - TRACK_GAP, 'blue');
-            }//end of checking if track is there
-            else if(trackGrid[arrayIndex] == TRACK_WALL){
-                canvasContext.drawImage(wallPic, TRACK_W*eachCol, TRACK_H*eachRow);
-            }
-
+            switch(tileKindHere){
+                case TRACK_ROAD:
+                    useImage = roadPic;
+                    break;
+                case TRACK_WALL:
+                    useImage = wallPic
+                    break;
+                    case TRACK_FLAG:
+                    useImage =  flagPic
+                    break;
+                case TRACK_GOAL:
+                    useImage = goalPic
+                    break;
+                case TRACK_TREE:
+                    useImage = treePic
+                    break;
+            }*/
+            canvasContext.drawImage(useImage, drawTileX, drawTileY);
+            drawTileX += TRACK_W;
+            arrayIndex++;
         
-        }//end of for each track
+        }//end of for each col
+        drawTileY += TRACK_H;
+        drawTileX = 0; //reset or it will draw in one long row
     }//end of for each row
 
 }//end of draw track
