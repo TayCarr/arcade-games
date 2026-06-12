@@ -5,7 +5,8 @@
  *****************************/
 var canvas, canvasContext;
 
-
+var blueCar = new carClass();
+var greenCar = new carClass();
 
 window.onload = function(){ //gets called as soon as html page finishes loading
     canvas = document.getElementById('gameCanvas'); //get width and height
@@ -26,7 +27,8 @@ function imageLoadingDoneSoStartGame(){
 
     setUpInput();
 
-    carReset();
+    blueCar.reset(carPic);
+    greenCar.reset(otherCarPic);
 
 }
 
@@ -37,8 +39,11 @@ function updateAll(){
 
 function moveAll(){
 
-    carMove();
-    carTrackHandling();
+    blueCar.move();
+    greenCar.move();
+
+    carTrackHandling(blueCar);
+    carTrackHandling(greenCar);
     
 }
 
@@ -50,5 +55,6 @@ function drawAll(){
     //tracks
     drawTracks();
 
-    carDraw();//need to draw car after tracks or it is drawn behind the tracks
+    blueCar.draw();//need to draw car after tracks or it is drawn behind the tracks
+    greenCar.draw();
 }
