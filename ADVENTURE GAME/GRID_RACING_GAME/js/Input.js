@@ -19,7 +19,7 @@ function setUpInput(){
     document.addEventListener('keydown', keyPressed);
     document.addEventListener('keyup', keyReleased);
 
-    blueCar.setupInput(KEY_W, KEY_D, KEY_S, KEY_A);
+    blueWarrior.setupInput(KEY_UP_ARROW, KEY_RIGHT_ARROW , KEY_DOWN_ARROW, KEY_LEFT_ARROW);
 
 }
 
@@ -31,43 +31,38 @@ function updateMousePos(evt){
     //subtract how far the canvas is from the left side and how much a person has scrolled the page
     mouseX = evt.clientX - rect.left - root.scrollLeft;
     mouseY = evt.clientY - rect.top - root.scrollTop;
-
-    //*****FOR TESTING MAKE CAR ON MOUSE
-    /*carX = mouseX;
-    carY = mouseY;
-    carSpeedX = 3;
-    carSpeedY = -4;*/
-    //****
 }
 /*
 * Since keyPressed and keyReleased were basically the same code, made this helper function 
 * so that instead it passes true/false to set the key to that rather than basically have duplicate code
 */
-function keySet(keyEvent, whichCar, setTo){
-    if(keyEvent.keyCode == whichCar.controlKeyLeft){
-        whichCar.keyHeld_TurnLeft = setTo;
+function keySet(keyEvent, whichWarrior, setTo){
+    if(keyEvent.keyCode == whichWarrior.controlKeyLeft){
+        whichWarrior.keyHeld_West = setTo;
     }
-    if(keyEvent.keyCode == whichCar.controlKeyRight){
-        whichCar.keyHeld_TurnRight = setTo;
+    if(keyEvent.keyCode == whichWarrior.controlKeyRight){
+        whichWarrior.keyHeld_East = setTo;
     }
-    if(keyEvent.keyCode == whichCar.controlKeyUp){
-        whichCar.keyHeld_Gas = setTo;
+    if(keyEvent.keyCode == whichWarrior.controlKeyUp){
+        whichWarrior.keyHeld_North = setTo;
     }
-    if(keyEvent.keyCode == whichCar.controlKeyDown){
-        whichCar.keyHeld_Reverse = setTo;
+    if(keyEvent.keyCode == whichWarrior.controlKeyDown){
+        whichWarrior.keyHeld_South = setTo;
     }
+
 }
 
 function keyPressed(evt){
     //how to see the value for the key being pressed, easy way to get for use later
-    //console.log("Key pressed: "+evt.keyCode);
+    console.log("Key pressed: "+evt.keyCode);
 
-    keySet(evt, blueCar, true);
+    keySet(evt, blueWarrior, true);
+    evt.preventDefault();
 
 }
 
 function keyReleased(evt){
     //console.log("Key released: "+evt.keyCode);
 
-    keySet(evt, blueCar, false);
+    keySet(evt, blueWarrior, false);
 }

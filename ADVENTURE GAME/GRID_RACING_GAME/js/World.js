@@ -1,12 +1,12 @@
 
 
-//track dimensions
+//world dimensions
 //TODO when making the tiles set the to 40x40 OR whatever WxH you have below
-const TRACK_W = 40;
-const TRACK_H = 40;
-const TRACK_GAP = 2;
-const TRACK_COLS = 20;
-const TRACK_ROWS = 15;
+const WORLD_W = 40;
+const WORLD_H = 40;
+const WORLD_GAP = 2;
+const WORLD_COLS = 20;
+const WORLD_ROWS = 15;
 
 //numbers to to draw the map layout 
 var levelOne = [   4, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4, 4, 
@@ -28,96 +28,84 @@ var levelOne = [   4, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4, 4,
 //*****TODO add other levels, gives code for 2 more levels  */
 //can refer to levels by index, have a level count variable and ++ it on win so it goes to next level, at max reset whole game and counter back to 0 
 //var levelList = [levelOne, levelTwo];
-var trackGrid = [];
-// 1 -> wall, 0 -> road, 2 -> car start position
-const TRACK_ROAD = 0;
-const TRACK_WALL = 1;
-const TRACK_PLAYERSTART = 2; //will need to make sure you add and additional player start for each player
-const TRACK_GOAL = 3;
-const TRACK_TREE = 4;
-const TRACK_FLAG = 5;
+var worldGrid = [];
+// 1 -> wall, 0 -> road, 2 -> warrior start position
+const WORLD_ROAD = 0;
+const WORLD_WALL = 1;
+const WORLD_PLAYERSTART = 2; //will need to make sure you add and additional player start for each player
+const WORLD_GOAL = 3;
+const WORLD_TREE = 4;
+const WORLD_FLAG = 5;
 
 function returnTileTypeAtColRow(col, row){
-    if(col >= 0 && col < TRACK_COLS && row >= 0 && row < TRACK_ROWS){
-        var trackIndexUnderCoord = rowColToArrayIndex(col, row);
-        return trackGrid[trackIndexUnderCoord];
+    if(col >= 0 && col < WORLD_COLS && row >= 0 && row < WORLD_ROWS){
+        var worldIndexUnderCoord = rowColToArrayIndex(col, row);
+        return worldGrid[worldIndexUnderCoord];
     }
     else{
-        return TRACK_WALL;//treat anything out of bounds as if it is a track wall
+        return WORLD_WALL;//treat anything out of bounds as if it is a world wall
     }
 }
 
-function carTrackHandling(whichCar){
+function getTileTypeAtPixelCoord(atX, atY) {
+	var warriorWorldCol = Math.floor(atX / WORLD_W);
+	var warriorWorldRow = Math.floor(atY / WORLD_H);
+	var worldIndexUnderWarrior = rowColToArrayIndex(warriorWorldCol, warriorWorldRow);
 
-    //car collision
-    var carTrackCol = Math.floor(whichCar.x / TRACK_W);
-    var carTrackRow = Math.floor(whichCar.y / TRACK_H);
-    var trackIndexUnderCar = rowColToArrayIndex(carTrackCol, carTrackRow);
+	if(warriorWorldCol >= 0 && warriorWorldCol < WORLD_COLS &&
+		warriorWorldRow >= 0 && warriorWorldRow < WORLD_ROWS) {
+		var tileHere = returnTileTypeAtColRow( warriorWorldCol,warriorWorldRow );
 
-    if(carTrackCol >= 0 && carTrackCol < TRACK_COLS && 
-        carTrackRow >= 0 && carTrackRow < TRACK_ROWS){
+		return tileHere;
+	} // end of valid col and row
 
-        var tileHere = returnTileTypeAtColRow(carTrackCol, carTrackRow);
+	return WORLD_WALL; // treat outside the map boundary as solid area
+} // end of warriorWorldHandling func
 
-        if(tileHere == TRACK_GOAL){
-            console.log(whichCar.name+" Wins!");
-            loadLevel(levelOne);
-        }
-        else if(tileHere != TRACK_ROAD){//only need to do if there is a track there else do nothing
-            //next two lines fix a bug, undoes the car movement which got it into a wall
-            //makes the walls more solid
-            whichCar.x -= Math.cos(whichCar.ang) * whichCar.speed;
-            whichCar.y -= Math.sin(whichCar.ang) * whichCar.speed;
-
-            whichCar.speed *= -0.5; //bumps the car and reduces the speed on collision
-            
-        }//end of track collision switch  
-    }//end of collision check
-}//end of car track handling function
 
 function rowColToArrayIndex(col, row){
-    return col + TRACK_COLS * row;
+    return col + WORLD_COLS * row;
 }
 
-function drawTracks(){
+function drawWorlds(){
     //doing these three var changes and incrementing is more efficient than making the funct call and multiplying for every tile
     var arrayIndex = 0;
     var drawTileX = 0;
     var drawTileY = 0;
 
-    for(var eachRow = 0; eachRow < TRACK_ROWS; eachRow++){
-        for(var eachCol = 0; eachCol < TRACK_COLS; eachCol++){
+    for(var eachRow = 0; eachRow < WORLD_ROWS; eachRow++){
+        for(var eachCol = 0; eachCol < WORLD_COLS; eachCol++){
             
-            var tileKindHere = trackGrid[arrayIndex];
-            var useImage = trackPics[tileKindHere];
+            var tileKindHere = worldGrid[arrayIndex];
+            var useImage = worldPics[tileKindHere];
 
             /*//switch case used previously 
             var useImage; 
 
             switch(tileKindHere){
-                case TRACK_ROAD:
+                case WORLD_ROAD:
                     useImage = roadPic;
                     break;
-                case TRACK_WALL:
+                case WORLD_WALL:
                     useImage = wallPic
                     break;
-                    case TRACK_FLAG:
+                    case WORLD_FLAG:
                     useImage =  flagPic
                     break;
-                case TRACK_GOAL:
+                case WORLD_GOAL:
                     useImage = goalPic
                     break;
-                case TRACK_TREE:
+                case WORLD_TREE:
                     useImage = treePic
                     break;
             }*/
             canvasContext.drawImage(useImage, drawTileX, drawTileY);
-            drawTileX += TRACK_W;
+            drawTileX += WORLD_W;
             arrayIndex++;
         
         }//end of for each col
-        drawTileY += TRACK_H;
+        drawTileY += WORLD_H;
         drawTileX = 0; //reset or it will draw in one long row
     }//end of for each row
 
-}//end of draw track
+}//end of draw world

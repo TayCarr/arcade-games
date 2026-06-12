@@ -5,13 +5,12 @@
  * custom graphics
  * different blocks different results
  * power ups
- * player collisions 
+ * 
  * hidden short cuts 
- * display winner name on the screen 
  *****************************/
 var canvas, canvasContext;
 
-var blueCar = new carClass();
+var blueWarrior = new warriorClass();
 
 
 window.onload = function(){ //gets called as soon as html page finishes loading
@@ -39,10 +38,10 @@ function imageLoadingDoneSoStartGame(){
 
 function loadLevel(whichLevel){
 
-    //.slice() is a way to copy the track level, as track=level just points to the same place in memory 
-    //and the changes we make to track will also change level so we will not be able to use level to restore the map on reset
-    trackGrid = whichLevel.slice();
-    blueCar.reset(carPic, "Blue");
+    //.slice() is a way to copy the world level, as world=level just points to the same place in memory 
+    //and the changes we make to world will also change level so we will not be able to use level to restore the map on reset
+    worldGrid = whichLevel.slice();
+    blueWarrior.reset(warriorPic, "Blue");
 }
 
 function updateAll(){
@@ -52,9 +51,7 @@ function updateAll(){
 
 function moveAll(){
 
-    blueCar.move();
-
-    carTrackHandling(blueCar);
+    blueWarrior.move();
     
 }
 
@@ -63,8 +60,8 @@ function clearScreen(){
 }
 
 function drawAll(){
-    //tracks
-    drawTracks();
+    //worlds
+    drawWorlds();
 
-    blueCar.draw();//need to draw car after tracks or it is drawn behind the tracks
+    blueWarrior.draw();//need to draw warrior after worlds or it is drawn behind the worlds
 }
