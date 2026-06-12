@@ -7,6 +7,7 @@
  * power ups
  * player collisions 
  * hidden short cuts 
+ * display winner name on the screen 
  *****************************/
 var canvas, canvasContext;
 
