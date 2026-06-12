@@ -9,7 +9,7 @@ const TRACK_COLS = 20;
 const TRACK_ROWS = 15;
 
 //numbers to to draw the map layout 
-var trackGrid = [   4, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4, 4, 
+var levelOne = [   4, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4, 4, 
                     4, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
                     1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
                     1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1,
@@ -25,6 +25,10 @@ var trackGrid = [   4, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4, 4,
                     1, 0, 3, 0, 0, 0, 1, 4, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1,
                     1, 1, 1, 1, 1, 1, 1, 4, 4, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4,
                 ];
+//*****TODO add other levels, gives code for 2 more levels  */
+//can refer to levels by index, have a level count variable and ++ it on win so it goes to next level, at max reset whole game and counter back to 0 
+//var levelList = [levelOne, levelTwo];
+var trackGrid = [];
 // 1 -> wall, 0 -> road, 2 -> car start position
 const TRACK_ROAD = 0;
 const TRACK_WALL = 1;
@@ -33,34 +37,33 @@ const TRACK_GOAL = 3;
 const TRACK_TREE = 4;
 const TRACK_FLAG = 5;
 
-function isObstacleAtColRow(col, row){
+function returnTileTypeAtColRow(col, row){
     if(col >= 0 && col < TRACK_COLS && row >= 0 && row < TRACK_ROWS){
         var trackIndexUnderCoord = rowColToArrayIndex(col, row);
-        return trackGrid[trackIndexUnderCoord] != TRACK_ROAD;
+        return trackGrid[trackIndexUnderCoord];
     }
     else{
-        return false;
+        return TRACK_WALL;//treat anything out of bounds as if it is a track wall
     }
 }
 
 function carTrackHandling(whichCar){
-    /*********USED WITH TESTING collision on mouse
-    //write mouse coordinates
-    var mouseTrackCol = Math.floor(mouseX / TRACK_W);
-    var mouseTrackRow = Math.floor(mouseY / TRACK_H);
-    var trackIndexUnderMouse = rowColToArrayIndex(mouseTrackCol, mouseTrackRow);
-    colorText(mouseTrackCol+","+mouseTrackRow+":"+trackIndexUnderMouse, mouseX, mouseY, 'yellow');
-    }********/
 
     //car collision
     var carTrackCol = Math.floor(whichCar.x / TRACK_W);
     var carTrackRow = Math.floor(whichCar.y / TRACK_H);
     var trackIndexUnderCar = rowColToArrayIndex(carTrackCol, carTrackRow);
-    //colorText(carTrackCol+","+carTrackRow+":"+trackIndexUnderCar, mouseX, mouseY, 'yellow');
 
-    //remove the track at index under car 
-    if(carTrackCol >= 0 && carTrackCol < TRACK_COLS && carTrackRow >= 0 && carTrackRow < TRACK_ROWS){
-        if(isObstacleAtColRow(carTrackCol, carTrackRow)){//only need to do if there is a track there else do nothing
+    if(carTrackCol >= 0 && carTrackCol < TRACK_COLS && 
+        carTrackRow >= 0 && carTrackRow < TRACK_ROWS){
+
+        var tileHere = returnTileTypeAtColRow(carTrackCol, carTrackRow);
+
+        if(tileHere == TRACK_GOAL){
+            console.log(whichCar.name+" Wins!");
+            loadLevel(levelOne);
+        }
+        else if(tileHere != TRACK_ROAD){//only need to do if there is a track there else do nothing
             //next two lines fix a bug, undoes the car movement which got it into a wall
             //makes the walls more solid
             whichCar.x -= Math.cos(whichCar.ang) * whichCar.speed;

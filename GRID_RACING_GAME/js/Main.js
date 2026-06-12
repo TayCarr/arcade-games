@@ -1,7 +1,12 @@
 
 /**********************
  * THINGS YOU COULD ADD !! TODO !!
- * 
+ * Levels
+ * custom graphics
+ * different blocks different results
+ * power ups
+ * player collisions 
+ * hidden short cuts 
  *****************************/
 var canvas, canvasContext;
 
@@ -27,9 +32,17 @@ function imageLoadingDoneSoStartGame(){
 
     setUpInput();
 
-    blueCar.reset(carPic);
-    greenCar.reset(otherCarPic);
+    loadLevel(levelOne);
 
+}
+
+function loadLevel(whichLevel){
+
+    //.slice() is a way to copy the track level, as track=level just points to the same place in memory 
+    //and the changes we make to track will also change level so we will not be able to use level to restore the map on reset
+    trackGrid = whichLevel.slice();
+    blueCar.reset(carPic, "Blue");
+    greenCar.reset(otherCarPic, "Green");
 }
 
 function updateAll(){
