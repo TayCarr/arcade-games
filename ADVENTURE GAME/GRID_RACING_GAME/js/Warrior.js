@@ -1,5 +1,6 @@
 
-const PLAYER_MOVE_SPEED = 3.0;
+//const PLAYER_MOVE_SPEED = 3.0;
+const PLAYER_MOVE_SPEED = 5.0;
 
 function warriorClass(){
     this.x = 75;

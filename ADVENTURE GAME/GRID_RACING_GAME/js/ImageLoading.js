@@ -36,13 +36,13 @@ function loadImageForWorldCode(worldCode, fileName){
 function loadImages(){
 
     var imageList = [
-        {varName: warriorPic, theFile: "player1car.png"}, 
+        {varName: warriorPic, theFile: "warrior.png"}, 
 
-        {worldType: WORLD_ROAD, theFile: "track_road.png"},
-        {worldType: WORLD_WALL, theFile: "track_wall.png"}, 
-        {worldType: WORLD_GOAL, theFile: "track_goal.png"},
-        {worldType: WORLD_TREE, theFile: "track_tree.png"},
-        {worldType: WORLD_FLAG, theFile: "track_flag.png"}
+        {worldType: WORLD_ROAD, theFile: "world_road.png"},
+        {worldType: WORLD_WALL, theFile: "world_wall.png"}, 
+        {worldType: WORLD_GOAL, theFile: "world_goal.png"},
+        {worldType: WORLD_KEY, theFile: "world_key.png"},
+        {worldType: WORLD_DOOR, theFile: "world_door.png"}
     ];
     //this solves the race condition and solves having to manually set the variable to the images you need to load
     picsToLoad = imageList.length;

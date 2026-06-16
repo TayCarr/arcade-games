@@ -7,6 +7,7 @@
  * power ups
  * 
  * hidden short cuts 
+ * i could clean up the variable names tile/road blah blah 
  *****************************/
 var canvas, canvasContext;
 
@@ -18,7 +19,7 @@ window.onload = function(){ //gets called as soon as html page finishes loading
     canvasContext = canvas.getContext('2d'); //grabs the actual graphics buffer
 
     //very basic loading screen
-    colorRect(0, 0, canvas.width, canvas.height, 'red');
+    colorRect(0, 0, canvas.width, canvas.height, 'white');
     colorText("LOADING IMAGES", canvas.width/2, canvas.height/2, 'white');
     //
 
