@@ -8,6 +8,9 @@ function warriorClass(){
 
     this.myWarriorPic; //which picture to use
     this.name ="Untitled Warrior";
+    //inventory
+    this.keysHeld = 0;
+    //this.pickaxe = 0;
 
     this.keyHeld_North = false;
     this.keyHeld_South = false;
@@ -59,8 +62,7 @@ function warriorClass(){
         if(this.keyHeld_South){
             nextY += PLAYER_MOVE_SPEED;
         }
-        if(this.keyHeld_West){//WEST KEY NOT WORKING
-            console.log("west changed (left arrow)")
+        if(this.keyHeld_West){
             nextX -= PLAYER_MOVE_SPEED;
         }
         if(this.keyHeld_East){
@@ -69,14 +71,45 @@ function warriorClass(){
         
 
         var walkIntoTileIndex = getTileTypeAtPixelCoord(nextX, nextY);
+        var walkIntoTileType = WORLD_WALL;//just set it to wall first
 
-		if(walkIntoTileIndex == WORLD_GOAL) {
-			console.log(this.name + " WINS!");
-			loadLevel(levelOne);
-		} else if(walkIntoTileIndex == WORLD_ROAD) {
-			this.x = nextX;
-			this.y = nextY;
-		}
+        if(walkIntoTileIndex != undefined){
+            walkIntoTileType = worldGrid[walkIntoTileIndex]; //now set it to the type
+        }
+        //set interaction for the different types
+        switch(walkIntoTileType){
+            case WORLD_ROAD:
+                this.x = nextX;
+			    this.y = nextY;
+                break;
+            case WORLD_GOAL:
+                console.log(this.name + " WINS!");
+			    loadLevel(levelOne);
+                break;
+            case WORLD_DOOR:
+                if(this.keysHeld > 0){
+                    this.keysHeld--; //use the key, remove from inventory
+                    console.log(this.keysHeld);
+                    //TODO update UI if displaying key inventory
+                    worldGrid[walkIntoTileIndex] = WORLD_ROAD;//remove the door and make it a walkway
+                }
+                //if do not have a key do nothing 
+                break;
+            case WORLD_KEY:
+                this.keysHeld++; //pick up key
+                //TODO update UI
+                worldGrid[walkIntoTileIndex] = WORLD_ROAD;//remove key make walking path
+                break;
+            case WORLD_WALL:
+            default:
+                break;
+
+
+        }
+
+		
+			
+		
         
     }
 

@@ -52,12 +52,10 @@ function getTileTypeAtPixelCoord(atX, atY) {
 
 	if(warriorWorldCol >= 0 && warriorWorldCol < WORLD_COLS &&
 		warriorWorldRow >= 0 && warriorWorldRow < WORLD_ROWS) {
-		var tileHere = returnTileTypeAtColRow( warriorWorldCol,warriorWorldRow );
-
-		return tileHere;
+		return worldIndexUnderWarrior;
 	} // end of valid col and row
 
-	return WORLD_WALL; // treat outside the map boundary as solid area
+	return undefined; // treat outside the map boundary as solid area
 } // end of warriorWorldHandling func
 
 

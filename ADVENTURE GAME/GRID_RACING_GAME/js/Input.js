@@ -54,7 +54,7 @@ function keySet(keyEvent, whichWarrior, setTo){
 
 function keyPressed(evt){
     //how to see the value for the key being pressed, easy way to get for use later
-    console.log("Key pressed: "+evt.keyCode);
+    //console.log("Key pressed: "+evt.keyCode);
 
     keySet(evt, blueWarrior, true);
     evt.preventDefault();
