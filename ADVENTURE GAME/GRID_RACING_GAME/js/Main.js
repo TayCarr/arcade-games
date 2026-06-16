@@ -5,7 +5,7 @@
  * custom graphics
  * different blocks different results
  * power ups
- * 
+ * UI displaying inventory
  * hidden short cuts 
  * i could clean up the variable names tile/road blah blah 
  *****************************/
