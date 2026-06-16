@@ -1,5 +1,5 @@
 
-var carPic = document.createElement("img");
+var carPic = document.createElement("img"); //100x60 but the car is 30x16 72 resolution
 var otherCarPic = document.createElement("img");
 var trackPics = [];
 

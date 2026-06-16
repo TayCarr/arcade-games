@@ -28,7 +28,7 @@ var levelOne = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
 var worldGrid = [];
 // 1 -> wall, 0 -> road, 2 -> warrior start position
 const WORLD_ROAD = 0;
-const WORLD_WALL = 1;
+const WORLD_WALL = 1;//if using bush has transpar
 const WORLD_PLAYERSTART = 2; //will need to make sure you add and additional player start for each player
 const WORLD_GOAL = 3;//draw road first
 const WORLD_KEY = 4;//draw road first
@@ -65,7 +65,7 @@ function rowColToArrayIndex(col, row){
 
 function hasTransparency(currTile){
     //if one of these tiles need to first draw floor under
-    return(currTile ==  WORLD_GOAL|| currTile == WORLD_KEY || currTile == WORLD_DOOR);
+    return(currTile ==  WORLD_GOAL|| currTile == WORLD_KEY || currTile == WORLD_DOOR || currTile == WORLD_WALL);
 
 }
 
@@ -83,7 +83,7 @@ function drawWorlds(){
             var useImage = worldPics[tileKindHere];
 
             //my code i just did the check here BUT his has a helper function, i assume i will need to check it in other actions? idk i will do the helper
-            if(tileKindHere == 3 || tileKindHere == 4 || tileKindHere == 5){
+            if(hasTransparency(tileKindHere)){
                 canvasContext.drawImage(worldPics[0], drawTileX, drawTileY);
             }
 
