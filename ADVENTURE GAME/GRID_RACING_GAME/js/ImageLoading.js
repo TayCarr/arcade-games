@@ -29,7 +29,9 @@ function beginLoadingImage(imgVar, fileName){
 }
 
 function loadImageForWorldCode(worldCode, fileName){
+
     worldPics[worldCode] = document.createElement("img");
+    
     beginLoadingImage(worldPics[worldCode], fileName);
 }
 
@@ -42,7 +44,8 @@ function loadImages(){
         {worldType: WORLD_WALL, theFile: "world_wall.png"}, 
         {worldType: WORLD_GOAL, theFile: "world_goal.png"},
         {worldType: WORLD_KEY, theFile: "world_key.png"},
-        {worldType: WORLD_DOOR, theFile: "world_door.png"}
+        {worldType: WORLD_DOOR, theFile: "world_door.png"},
+        {worldType: WORLD_DOOR_OPEN, theFile: "world_door_open.gif", gifType: true}
     ];
     //this solves the race condition and solves having to manually set the variable to the images you need to load
     picsToLoad = imageList.length;
@@ -52,7 +55,20 @@ function loadImages(){
             beginLoadingImage(imageList[i].varName, imageList[i].theFile);
         }
         else{
+            //TODO getting the animation to work will need to do some googling...
+            /** 
+            if(imageList[i].gifType != undefined){
+                console.log("true: "+imageList[i].theFile);
+                worldPics[imageList[i].worldType] = document.createElement("gif");
+                console.log(worldPics[imageList[i].worldType]);
+                beginLoadingImage(worldPics[imageList[i].worldType], imageList[i].theFile);
+            }
+            else{
+                loadImageForWorldCode(imageList[i].worldType, imageList[i].theFile);
+            }
+            */
             loadImageForWorldCode(imageList[i].worldType, imageList[i].theFile);
+            
         }
     }
     

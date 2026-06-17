@@ -65,4 +65,6 @@ function drawAll(){
     drawWorlds();
 
     blueWarrior.draw();//need to draw warrior after worlds or it is drawn behind the worlds
+
+    blueWarrior.drawText();
 }

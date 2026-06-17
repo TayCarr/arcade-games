@@ -2,6 +2,9 @@
 //const PLAYER_MOVE_SPEED = 3.0;
 const PLAYER_MOVE_SPEED = 8.0;
 
+const KEYX = 100;
+const KEYY = 625;
+
 function warriorClass(){
     this.x = 75;
     this.y = 75;
@@ -82,6 +85,10 @@ function warriorClass(){
                 this.x = nextX;
 			    this.y = nextY;
                 break;
+            case WORLD_DOOR_OPEN:
+                this.x = nextX;
+                this.y = nextY;
+                break;
             case WORLD_GOAL:
                 console.log(this.name + " WINS!");
 			    loadLevel(levelOne);
@@ -89,15 +96,13 @@ function warriorClass(){
             case WORLD_DOOR:
                 if(this.keysHeld > 0){
                     this.keysHeld--; //use the key, remove from inventory
-                    console.log(this.keysHeld);
-                    //TODO update UI if displaying key inventory
-                    worldGrid[walkIntoTileIndex] = WORLD_ROAD;//remove the door and make it a walkway
+                    //console.log(this.keysHeld);
+                    worldGrid[walkIntoTileIndex] = WORLD_DOOR_OPEN;//remove the door and make it a walkway
                 }
                 //if do not have a key do nothing 
                 break;
             case WORLD_KEY:
                 this.keysHeld++; //pick up key
-                //TODO update UI
                 worldGrid[walkIntoTileIndex] = WORLD_ROAD;//remove key make walking path
                 break;
             case WORLD_WALL:
@@ -111,6 +116,14 @@ function warriorClass(){
 			
 		
         
+    }
+
+    //write the inventory UI, call in Main.js/drawAll()
+    this.drawText = function(){
+        // Configure text styles
+        canvasContext.font = "25px Arial";
+        
+        colorText("treats: "+this.keysHeld, KEYX, KEYY, 'white');
     }
 
     this.draw = function(){
