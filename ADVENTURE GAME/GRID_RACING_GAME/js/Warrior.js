@@ -1,6 +1,6 @@
 
 //const PLAYER_MOVE_SPEED = 3.0;
-const PLAYER_MOVE_SPEED = 8.0;
+const PLAYER_MOVE_SPEED = 5.0;
 
 const KEYX = 100;
 const KEYY = 625;
@@ -10,6 +10,8 @@ function warriorClass(){
     this.y = 75;
 
     this.myWarriorPic; //which picture to use
+    this.myWarriorPic2;
+    this.picSwitch = false; //start false and swap to true to alternate
     this.name ="Untitled Warrior";
     //inventory
     this.keysHeld = 0;
@@ -32,9 +34,10 @@ function warriorClass(){
         this.controlKeyLeft = leftKey;
     }
 
-    this.reset = function(whichImage, warriorName){ //how to declare a function within the class
+    this.reset = function(whichImage, otherImage, warriorName){ //how to declare a function within the class
         this.name = warriorName;
         this.myWarriorPic = whichImage;
+        this.myWarriorPic2 = otherImage;
 
         for(var eachRow = 0; eachRow < WORLD_ROWS; eachRow++){
             for(var eachCol = 0; eachCol < WORLD_COLS; eachCol++){
@@ -61,15 +64,19 @@ function warriorClass(){
 
         if(this.keyHeld_North){
             nextY -= PLAYER_MOVE_SPEED;
+            this.picSwitch = !this.picSwitch;
         }
         if(this.keyHeld_South){
             nextY += PLAYER_MOVE_SPEED;
+            this.picSwitch = !this.picSwitch;
         }
         if(this.keyHeld_West){
             nextX -= PLAYER_MOVE_SPEED;
+            this.picSwitch = !this.picSwitch;
         }
         if(this.keyHeld_East){
             nextX += PLAYER_MOVE_SPEED;
+            this.picSwitch = !this.picSwitch;
         }
         
 
@@ -128,9 +135,16 @@ function warriorClass(){
 
     this.draw = function(){
         //warrior image 
+        //drawBitmapCenteredWithRotation(this.myWarriorPic2, this.x, this.y, 0);
         
-        //subtracting half of the lengths centers the image in middle of that position rather than in the top corner
-        drawBitmapCenteredWithRotation(this.myWarriorPic, this.x, this.y, 0);
+
+        if(!this.picSwitch){
+            drawBitmapCenteredWithRotation(this.myWarriorPic2, this.x, this.y, 0);
+        }
+        else{
+            //subtracting half of the lengths centers the image in middle of that position rather than in the top corner
+            drawBitmapCenteredWithRotation(this.myWarriorPic, this.x, this.y, 0);
+        }
         
     }
 }//end of class

@@ -42,7 +42,7 @@ function loadLevel(whichLevel){
     //.slice() is a way to copy the world level, as world=level just points to the same place in memory 
     //and the changes we make to world will also change level so we will not be able to use level to restore the map on reset
     worldGrid = whichLevel.slice();
-    blueWarrior.reset(warriorPic, "Blue");
+    blueWarrior.reset(warriorPic, warriorPic2, "Blue");
 }
 
 function updateAll(){

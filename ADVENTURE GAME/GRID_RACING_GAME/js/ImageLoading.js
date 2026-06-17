@@ -1,6 +1,6 @@
 
 var warriorPic = document.createElement("img");
-var otherWarriorPic = document.createElement("img");
+var warriorPic2 = document.createElement("img");
 var worldPics = [];
 
 /*var roadPic = document.createElement("img");
@@ -39,6 +39,7 @@ function loadImages(){
 
     var imageList = [
         {varName: warriorPic, theFile: "warrior.png"}, 
+        {varName: warriorPic2, theFile: "warrior2.png"},
 
         {worldType: WORLD_ROAD, theFile: "world_road.png"},
         {worldType: WORLD_WALL, theFile: "world_wall.png"}, 
@@ -53,9 +54,11 @@ function loadImages(){
     for(var i = 0; i < imageList.length; i++){
         if(imageList[i].varName != undefined){
             beginLoadingImage(imageList[i].varName, imageList[i].theFile);
+            //console.log("loaded: "+imageList[i].theFile);
         }
         else{
-            //TODO getting the animation to work will need to do some googling...
+            //TODO getting the animation of sleeping dog to work will need to do some googling...
+            //i think it needs to be images that are drawn in not a gif...
             /** 
             if(imageList[i].gifType != undefined){
                 console.log("true: "+imageList[i].theFile);
