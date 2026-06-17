@@ -46,7 +46,12 @@ function loadImages(){
         {worldType: WORLD_GOAL, theFile: "world_goal.png"},
         {worldType: WORLD_KEY, theFile: "world_key.png"},
         {worldType: WORLD_DOOR, theFile: "world_door.png"},
-        {worldType: WORLD_DOOR_OPEN, theFile: "world_door_open.gif", gifType: true}
+        {worldType: WORLD_DOOR_OPEN, theFile: "world_door_open.gif", gifType: true},
+        {worldType: WORLD_WALL_GAP, theFile: "world_wall_gap.png"},
+        {worldType: NOT_WALL_GAP, theFile: "world_wall_gap.png"},
+        {worldType: WORLD_TOY, theFile: "world_wall_toy.png"},
+        {worldType: GOAL_SUCCESS, theFile: "goal_success.png"},
+        {worldType: GOAL_FAIL, theFile: "goal_fail.png"}
     ];
     //this solves the race condition and solves having to manually set the variable to the images you need to load
     picsToLoad = imageList.length;

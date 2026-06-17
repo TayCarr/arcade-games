@@ -1,13 +1,16 @@
 
 /**********************
  * THINGS YOU COULD ADD !! TODO !!
+ * give up button, reset the game so if you frick up with keys 
  * Levels
  * custom graphics
  * different blocks different results
  * power ups
  * UI displaying inventory
- * hidden short cuts 
+ * hidden short cuts, like a buch that looks slightly diff and you can walk through
  * i could clean up the variable names tile/road blah blah 
+ * when left arrow could flip image? do a transformation maybe? not make new flipped img?
+ * win condition?? find dews rope toy to bring to her if dont have she just ?? you if you have she <3
  *****************************/
 var canvas, canvasContext;
 

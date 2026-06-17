@@ -9,18 +9,18 @@ const WORLD_COLS = 16;
 const WORLD_ROWS = 13;
 
 //numbers to to draw the map layout 
-var levelOne = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-                1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 5, 0, 1, 4, 1,
+var levelOne = [7, 1, 1, 1, 1, 1, 1, 8, 1, 1, 1, 1, 1, 1, 1, 7,
+                1, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 5, 0, 1, 4, 1,
                 1, 0, 4, 0, 4, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 1,
-                1, 0, 0, 0, 0, 0, 1, 0, 0, 4, 0, 1, 5, 1, 4, 1,
-                1, 1, 1, 5, 1, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 1,
-                1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 5, 1,
+                1, 0, 0, 0, 0, 0, 1, 0, 0, 4, 0, 8, 5, 1, 4, 1,
+                7, 1, 1, 5, 1, 1, 8, 0, 0, 0, 0, 1, 0, 8, 0, 1,
+                1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 7, 0, 1, 5, 1,
                 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1,
-                1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 4, 0, 4, 1,
-                1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1,
+                1, 0, 0, 8, 1, 1, 1, 1, 8, 1, 1, 0, 4, 0, 4, 1,
+                8, 0, 0, 1, 0, 1, 0, 1, 0, 0, 7, 1, 0, 0, 0, 8,
                 1, 2, 0, 5, 0, 5, 0, 5, 0, 3, 1, 1, 5, 1, 5, 1,
-                1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1,
-                1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                1, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 9,
+                1, 1, 1, 7, 1, 1, 1, 1, 8, 1, 1, 1, 1, 7, 1, 1,
                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
             ];
 //*****TODO add other levels, gives code for 2 more levels  */
@@ -35,6 +35,11 @@ const WORLD_GOAL = 3;//draw road first
 const WORLD_KEY = 4;//draw road first
 const WORLD_DOOR = 5;//draw road first
 const WORLD_DOOR_OPEN = 6;
+const WORLD_WALL_GAP = 7;
+const NOT_WALL_GAP = 8;
+const WORLD_TOY = 9;
+const GOAL_SUCCESS = 10;
+const GOAL_FAIL =11;
 //pickaxe TODO have a secret ending
 
 function returnTileTypeAtColRow(col, row){
@@ -67,7 +72,8 @@ function rowColToArrayIndex(col, row){
 
 function hasTransparency(currTile){
     //if one of these tiles need to first draw floor under
-    return(currTile ==  WORLD_GOAL|| currTile == WORLD_KEY || currTile == WORLD_DOOR || currTile == WORLD_WALL || currTile == WORLD_DOOR_OPEN);
+    return(currTile ==  WORLD_GOAL|| currTile == WORLD_KEY || currTile == WORLD_DOOR || currTile == WORLD_WALL ||
+         currTile == WORLD_DOOR_OPEN || currTile == WORLD_WALL_GAP || currTile == NOT_WALL_GAP || currTile == WORLD_TOY);
 
 }
 

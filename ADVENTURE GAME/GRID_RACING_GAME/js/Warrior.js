@@ -11,11 +11,12 @@ function warriorClass(){
 
     this.myWarriorPic; //which picture to use
     this.myWarriorPic2;
-    this.picSwitch = false; //start false and swap to true to alternate
+    this.picSwitch = true; //start true and swap to false to alternate
     this.name ="Untitled Warrior";
     //inventory
     this.keysHeld = 0;
-    //this.pickaxe = 0;
+    this.toyheld = false;
+
 
     this.keyHeld_North = false;
     this.keyHeld_South = false;
@@ -38,6 +39,7 @@ function warriorClass(){
         this.name = warriorName;
         this.myWarriorPic = whichImage;
         this.myWarriorPic2 = otherImage;
+        this.toyheld = false;
 
         for(var eachRow = 0; eachRow < WORLD_ROWS; eachRow++){
             for(var eachCol = 0; eachCol < WORLD_COLS; eachCol++){
@@ -96,9 +98,23 @@ function warriorClass(){
                 this.x = nextX;
                 this.y = nextY;
                 break;
+            case WORLD_WALL_GAP:
+            this.x = nextX;
+            this.y = nextY;
+            break;
             case WORLD_GOAL:
-                console.log(this.name + " WINS!");
-			    loadLevel(levelOne);
+                if(this.toyheld){
+                    console.log(this.name + " WINS!");
+                    worldGrid[walkIntoTileIndex] = GOAL_SUCCESS;
+                    console.log("Loading reset in 3 seconds");
+                    setTimeout(() => {
+                        loadLevel(levelOne);
+                      }, 3000);
+			        
+                }else{
+                    worldGrid[walkIntoTileIndex] = GOAL_FAIL;
+                }
+                
                 break;
             case WORLD_DOOR:
                 if(this.keysHeld > 0){
@@ -112,7 +128,12 @@ function warriorClass(){
                 this.keysHeld++; //pick up key
                 worldGrid[walkIntoTileIndex] = WORLD_ROAD;//remove key make walking path
                 break;
+            case WORLD_TOY:
+                this.toyheld = true; //pick up toy
+                worldGrid[walkIntoTileIndex] = WORLD_WALL;//remove key make walking path
+            break;
             case WORLD_WALL:
+            case NOT_WALL_GAP:
             default:
                 break;
 
