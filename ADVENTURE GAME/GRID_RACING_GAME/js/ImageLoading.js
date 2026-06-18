@@ -1,6 +1,11 @@
 
 var warriorPic = document.createElement("img");
 var warriorPic2 = document.createElement("img");
+
+//walking
+var walk1 = document.createElement("img");
+var walk2 = document.createElement("img");
+
 var resetPic = document.createElement("img");
 var worldPics = [];
 
@@ -41,6 +46,8 @@ function loadImages(){
     var imageList = [
         {varName: warriorPic, theFile: "warrior.png"}, 
         {varName: warriorPic2, theFile: "warrior2.png"},
+        {varName: walk1, theFile: "warrior_walk1.png"},
+        {varName: walk2, theFile: "warrior_walk2.png"},
         {varName: resetPic, theFile: "reset.png"},
 
         {worldType: WORLD_ROAD, theFile: "world_road.png"},

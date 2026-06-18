@@ -13,6 +13,11 @@ function warriorClass(){
     this.myWarriorPic2;
     this.picSwitch = true; //start true and swap to false to alternate
     this.name ="Untitled Warrior";
+
+    //walking
+    this.walkFrame = 0;
+    this.walkTimer = 0;
+
     //inventory
     this.keysHeld = 0;
     this.toyheld = false;
@@ -63,22 +68,31 @@ function warriorClass(){
         
         var nextX = this.x;
         var nextY = this.y;
+        var isMoving = this.keyHeld_East || this.keyHeld_West || this.keyHeld_South || this.keyHeld_North;
+
+        if(isMoving){
+            this.walkTimer++;
+
+            if(this.walkTimer > 8){
+                this.walkTimer = 0;
+                this.walkFrame = (this.walkFrame + 1) % 2;
+            }
+        }
+        else{
+            this.walkFrame = 0; //standing
+        }
 
         if(this.keyHeld_North){
             nextY -= PLAYER_MOVE_SPEED;
-            this.picSwitch = !this.picSwitch;
         }
         if(this.keyHeld_South){
             nextY += PLAYER_MOVE_SPEED;
-            this.picSwitch = !this.picSwitch;
         }
         if(this.keyHeld_West){
             nextX -= PLAYER_MOVE_SPEED;
-            this.picSwitch = !this.picSwitch;
         }
         if(this.keyHeld_East){
             nextX += PLAYER_MOVE_SPEED;
-            this.picSwitch = !this.picSwitch;
         }
         
 
@@ -139,12 +153,22 @@ function warriorClass(){
 
 
         }
-
-		
-			
-		
         
     }
+
+    this.drawWalk = function(){
+        //TODO
+        //could have the list like umm world pieces if i have longer animations
+        //could also make this funct more generic like "draw animations" pass the list or a flag for which one 
+        //could do the sleeping dog animation for example
+
+        if(this.walkFrame === 0){
+            drawBitmapCenteredWithRotation(walk1, this.x, this.y, 0);
+        }
+        else{
+            drawBitmapCenteredWithRotation(walk2, this.x, this.y, 0);
+        }
+    }//end of draw walk
 
     //write the inventory UI, call in Main.js/drawAll()
     this.drawText = function(){
@@ -155,15 +179,24 @@ function warriorClass(){
     }
 
     this.draw = function(){
-        //warrior image 
-        //drawBitmapCenteredWithRotation(this.myWarriorPic2, this.x, this.y, 0);
-        
 
-        if(!this.picSwitch){
+        //****draw no animation
+        //drawBitmapCenteredWithRotation(this.myWarriorPic, this.x, this.y, 0);
+
+        //**draw the original basic walk flip */
+        /**if(!this.picSwitch){
             drawBitmapCenteredWithRotation(this.myWarriorPic2, this.x, this.y, 0);
         }
         else{
             //subtracting half of the lengths centers the image in middle of that position rather than in the top corner
+            drawBitmapCenteredWithRotation(this.myWarriorPic, this.x, this.y, 0);
+        }**/
+
+        //**if stand still draw still img else do the walking animation */
+        if(this.keyHeld_East || this.keyHeld_North || this.keyHeld_West || this.keyHeld_South){
+            this.drawWalk();
+        }
+        else{
             drawBitmapCenteredWithRotation(this.myWarriorPic, this.x, this.y, 0);
         }
         
