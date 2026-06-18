@@ -70,4 +70,7 @@ function drawAll(){
     blueWarrior.draw();//need to draw warrior after worlds or it is drawn behind the worlds
 
     blueWarrior.drawText();
+
+    //draw reset button incase user needs to 
+    drawBitmapCenteredWithRotation(resetPic, 750, 625, 0);
 }

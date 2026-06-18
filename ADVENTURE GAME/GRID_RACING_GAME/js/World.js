@@ -1,5 +1,4 @@
 
-
 //world dimensions width="800" height="600"//650 now added a row at the bottom for UI stuff
 //TODO when making the tiles set the to 40x40 OR whatever WxH you have below
 const WORLD_W = 50;
@@ -73,7 +72,8 @@ function rowColToArrayIndex(col, row){
 function hasTransparency(currTile){
     //if one of these tiles need to first draw floor under
     return(currTile ==  WORLD_GOAL|| currTile == WORLD_KEY || currTile == WORLD_DOOR || currTile == WORLD_WALL ||
-         currTile == WORLD_DOOR_OPEN || currTile == WORLD_WALL_GAP || currTile == NOT_WALL_GAP || currTile == WORLD_TOY);
+         currTile == WORLD_DOOR_OPEN || currTile == WORLD_WALL_GAP || currTile == NOT_WALL_GAP || currTile == WORLD_TOY
+         || currTile == GOAL_FAIL || currTile == GOAL_SUCCESS);
 
 }
 

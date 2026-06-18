@@ -1,6 +1,7 @@
 
 var warriorPic = document.createElement("img");
 var warriorPic2 = document.createElement("img");
+var resetPic = document.createElement("img");
 var worldPics = [];
 
 /*var roadPic = document.createElement("img");
@@ -40,6 +41,7 @@ function loadImages(){
     var imageList = [
         {varName: warriorPic, theFile: "warrior.png"}, 
         {varName: warriorPic2, theFile: "warrior2.png"},
+        {varName: resetPic, theFile: "reset.png"},
 
         {worldType: WORLD_ROAD, theFile: "world_road.png"},
         {worldType: WORLD_WALL, theFile: "world_wall.png"}, 

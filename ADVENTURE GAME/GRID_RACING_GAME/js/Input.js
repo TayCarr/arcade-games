@@ -14,12 +14,31 @@ const KEY_A = 65;
 
 function setUpInput(){
     //capture mouse movement
-    canvas.addEventListener('mousemove', updateMousePos);
+    canvas.addEventListener('mousemove', updateMousePos); //TODO maybe on hover the reset button glows or enlarges or something
+
+    canvas.addEventListener('click', mouseClick);//check if the reset button was clicked
 
     document.addEventListener('keydown', keyPressed);
     document.addEventListener('keyup', keyReleased);
 
     blueWarrior.setupInput(KEY_UP_ARROW, KEY_RIGHT_ARROW , KEY_DOWN_ARROW, KEY_LEFT_ARROW);
+
+}
+
+function mouseClick(evt){
+    //gets the position of the canvas on the page, so if there is text or something else on the page it will account for that
+    var rect = canvas.getBoundingClientRect(); 
+    var root = document.documentElement;
+
+    //subtract how far the canvas is from the left side and how much a person has scrolled the page
+    mouseX = evt.clientX - rect.left - root.scrollLeft;
+    mouseY = evt.clientY - rect.top - root.scrollTop;
+
+    console.log("clicked at x: "+mouseX+" y: "+mouseY);
+    //if user clicked between x positions and y positions then warrior.reset? 
+    if(mouseX < 770 && mouseX > 725 && mouseY < 650 && mouseY > 600){
+        loadLevel(levelOne); //TODO if other levels i guess load that level again?
+    }
 
 }
 
