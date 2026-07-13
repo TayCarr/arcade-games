@@ -37,6 +37,8 @@ function mouseClick(evt){
     console.log("clicked at x: "+mouseX+" y: "+mouseY);
     //if user clicked between x positions and y positions then warrior.reset? 
     if(mouseX < 770 && mouseX > 725 && mouseY < 650 && mouseY > 600){
+        blueWarrior.keysHeld = 0;
+        blueWarrior.toyheld = false;
         loadLevel(levelOne); //TODO if other levels i guess load that level again?
     }
 
